@@ -192,7 +192,8 @@ namespace $.$$ {
 			console.log(index);
 			
 			// console.log( this.results_raw()[ index ][ 'highlight' ].text )
-			const descr = this.results_raw()[ index ][ 'highlight' ].text[0] ?? ''
+			const descr = this.results_raw()[ index ][ 'highlight' ].text[0] ??
+			this.results_raw()[index][ '_source'].text
 			return this.result_title( index ) === descr ? '' : descr
 		}
 
