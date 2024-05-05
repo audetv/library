@@ -1,0 +1,39 @@
+$audetv_library_app $mol_book2
+	plugins /
+		<= Theme $mol_theme_auto
+	Placeholder null
+	query_results?next \
+	pages /
+		<= Main $mol_page
+			title <= query
+			bring <= main_bring
+			Title <= Query $mol_search
+				hint \Поиск…
+				query?val <=> query?val \
+				submit?event <=> submit?event null
+				bring => main_bring
+			tools /
+				<= Settings_open $mol_link
+					sub /
+						<= Settings_open_icon $mol_icon_settings
+			body_content / <= Content $mol_view sub <= main_content /
+				<= Error $mol_view sub / <= error null
+				<= Result_list $mol_list
+					rows <= result_list /
+					Empty <= Result_list_empty $mol_view
+						sub /
+							<= result_list_empty \No results
+	Result_item!index $mol_link
+		uri <= result_uri!index \
+		target \search_result
+		sub /
+			<= Result_info!index $mol_row
+				sub /
+					<= Result_main!index $mol_list
+						rows <= result_main!index /
+							<= Result_title!index $mol_dimmer
+								haystack <= result_title!index \
+								needle <= query
+							<= Result_descr!index $mol_dimmer
+								haystack <= result_descr!index \
+								needle <= query

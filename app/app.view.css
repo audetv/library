@@ -1,0 +1,7 @@
+[audetv_library_app_main] {
+	flex: 1 0 40rem;
+}
+
+[audetv_library_app_main_tools] {
+	flex-grow: 0;
+}
