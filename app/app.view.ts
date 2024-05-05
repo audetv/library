@@ -57,9 +57,15 @@ namespace $.$$ {
 
 		@$mol_mem
 		query_forbidden() {
+			console.log( this.blacklist()
+				.split( $mol_regexp.line_end )
+				.filter( Boolean )
+				.join( ' ' ) );
+			
 			return this.blacklist()
 				.split( $mol_regexp.line_end )
 				.filter( Boolean )
+				.map( domain => `@author !"${ domain }"`)
 				.join( ' ' )
 		}
 
@@ -149,7 +155,7 @@ namespace $.$$ {
 
 		@$mol_mem
 		result_list() {
-			return this.results_raw().map( ( _, i ) => this.Result_item( i ) )
+			return this.results_raw().map( ( _:any, i:number ) => this.Result_item( i ) )
 		}
 
 		@$mol_mem_key
@@ -183,8 +189,10 @@ namespace $.$$ {
 
 		@$mol_mem_key
 		result_descr( index: number ) {
-			// console.log( this.results_raw()[ index ]['_source'] )
-			const descr = this.results_raw()[ index ][ '_source' ].text ?? ''
+			console.log(index);
+			
+			// console.log( this.results_raw()[ index ][ 'highlight' ].text )
+			const descr = this.results_raw()[ index ][ 'highlight' ].text[0] ?? ''
 			return this.result_title( index ) === descr ? '' : descr
 		}
 
@@ -244,7 +252,7 @@ namespace $.$$ {
 		@$mol_mem_key
 		result_ban_options( index: number ) {
 			const names = this.result_host( index ).split( '.' )
-			return names.slice( 0, -1 ).map( ( _, i ) => names.slice( i ).join( '.' ) )
+			return names.slice( 0, -1 ).map( ( _: any, i: number ) => names.slice( i ).join( '.' ) )
 		}
 
 		result_ban( index: number, host?: string ) {

@@ -50,8 +50,8 @@ namespace $ {
 			fields: [ "genre", "author", "title", "text" ],
 			limit: 0,
 			no_match_size: 0,
-			pre_tags: "<mark>",
-			post_tags: "</mark>",
+			pre_tags: "<strong>",
+			post_tags: "</strong>",
 		},
 		query: {
 			query_string: query,

@@ -107,3 +107,9 @@
 [audetv_library_app_result_ban_option_label] {
 	text-align: right;
 }
+
+[audetv_library_app_result_descr_strong] {	
+	display: inline;
+	color: var(--mol_theme_focus);
+	text-shadow: 0 0;
+}
