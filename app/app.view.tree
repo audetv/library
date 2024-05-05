@@ -13,7 +13,28 @@ $audetv_library_app $mol_book2
 				submit?event <=> submit?event null
 				bring => main_bring
 			tools /
+				<= Exact $mol_check_icon
+					checked?val <=> exact?val false
+					Icon <= Exact_icon $mol_icon_bullseye_arrow
+					hint \Точное совпадение
+				<= Exclude $mol_select_list
+					value?val <=> exclude?val /string
+					options <= exclude_options /string
+					badge_title!value <= exclude_badge_title!value \
+					pick_hint \Исключить слова…
+					pick_enabled true
+					Pick_icon <= Exclude_icon $mol_icon_minus_circle_outline
+				<= Where $mol_select
+					value?next <=> where?next \Везде
+					Filter null
+					dictionary *
+						anywhere \Везде
+						allintitle \В Заголовке
+						allintext \В Тексте
+						allinurl \В Адресе
+						allinanchor \В Ссылке
 				<= Settings_open $mol_link
+					arg * settings \
 					sub /
 						<= Settings_open_icon $mol_icon_settings
 			body_content / <= Content $mol_view sub <= main_content /
@@ -22,7 +43,51 @@ $audetv_library_app $mol_book2
 					rows <= result_list /
 					Empty <= Result_list_empty $mol_view
 						sub /
-							<= result_list_empty \No results
+							<= result_list_empty \Нет результатов
+			foot <= searcher_links /
+		<= Settings $mol_page
+			title \Настройки
+			tools /
+				<= Lights $mol_lights_toggle
+				<= Sources $mol_link_source
+					uri \https://github.com/audetv/library
+				<= Settings_close $mol_link
+					arg * settings null
+					sub /
+						<= Settings_close_icon $mol_icon_close
+			body /
+				<= Settings_fields $mol_list
+					rows /
+						<= Searchers_field $mol_form_field
+							name \Другие источники концептуального поиска
+							Content <= Searchers $mol_textarea
+								hint \Каждый префикс на отдельной строке
+								value?next <=> searchers?next \
+									\https://svodd.ru/?search%5Bquery%5D=
+									\https://kob.svodd.ru/?search%5Bquery%5D=
+									\https://lib.svodd.ru/?search%5Bquery%5D=
+									\https://feed.svodd.ru/search?query=
+									\https://yandex.ru/search/?text=
+									\https://www.google.com/search?q=
+						<= Blacklist_field $mol_form_field
+							name \Чёрный Список Доменов
+							Content <= Blacklist $mol_textarea
+								hint \Каждый домен на новой строке
+								value?next <=> blacklist?next \
+									\pinterest.com
+									\itnan.ru
+						<= Query_dump_field $mol_form_field
+							name \Полный Запрос
+							Content <= Query_dump $mol_text_code
+								text <= query_dump \
+	Sideview!uri $mol_view
+		title \Found
+		sub /
+			<= Sideview_hint $mol_paragraph
+				title \Open in new tab if didn't load
+			<= Sideview_embed!uri $mol_embed_native
+				uri <= sideview?val \about:blank
+				sub /
 	Result_item!index $mol_link
 		uri <= result_uri!index \
 		target \search_result
@@ -34,6 +99,21 @@ $audetv_library_app $mol_book2
 							<= Result_title!index $mol_dimmer
 								haystack <= result_title!index \
 								needle <= query
+							<= Result_host!index $mol_dimmer
+								haystack <= result_host!index \
+								needle <= query
 							<= Result_descr!index $mol_dimmer
 								haystack <= result_descr!index \
 								needle <= query
+			<= Result_tools!index $mol_list
+				rows /
+					<= Result_ban!index $mol_select
+						Trigger_icon <= Result_ban_icon!index $mol_icon_close
+						hint \Забанить сайт…
+						Filter null
+						align_hor \left
+						options <= result_ban_options!index /string
+						value?val <=> result_ban!index?val \
+	Searcher_link!id $mol_link_iconed
+		title \
+		uri <= searcher_link!id \

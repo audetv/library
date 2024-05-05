@@ -40,6 +40,7 @@ namespace $.$$ {
 		@$mol_mem
 		exclude( next?: readonly string[] ) {
 			const str = this.$.$mol_state_arg.value( 'exclude', next && next.join( ' ' ) ) ?? ''
+
 			return str.split( ' ' ).filter( Boolean ) as readonly string[]
 		}
 
@@ -54,18 +55,18 @@ namespace $.$$ {
 				this.exact() ? `"${ query }"` : query,
 				this.query_exclude(),
 				this.query_type(),
-				// this.query_forbidden(),
+				this.query_forbidden(),
 			].join( ' ' )
 
 		}
 
-		// @$mol_mem
-		// query_forbidden() {
-		// 	return this.blacklist()
-		// 		.split( $mol_regexp.line_end )
-		// 		.filter( Boolean )
-		// 		.join( ' ' )
-		// }
+		@$mol_mem
+		query_forbidden() {
+			return this.blacklist()
+				.split( $mol_regexp.line_end )
+				.filter( Boolean )
+				.join( ' ' )
+		}
 
 		@$mol_mem
 		query_type() {
@@ -100,13 +101,13 @@ namespace $.$$ {
 				.join( '\n' )
 		}
 
-		// blacklist( next?: string ) {
-		// 	return this.$.$mol_state_local.value( 'blacklist', next ) ?? super.blacklist()
-		// }
+		blacklist( next?: string ) {
+			return this.$.$mol_state_local.value( 'blacklist', next ) ?? super.blacklist()
+		}
 
-		// searchers( next?: string ) {
-		// 	return this.$.$mol_state_local.value( 'searchers', next ) ?? super.searchers()
-		// }
+		searchers( next?: string ) {
+			return this.$.$mol_state_local.value( 'searchers', next ) ?? super.searchers()
+		}
 
 		@$mol_mem
 		settings( next?: boolean ) {
@@ -118,13 +119,13 @@ namespace $.$$ {
 		pages() {
 			return [
 				this.Main(),
-				// ... this.settings() ? [ this.Settings() ] : [],
-				// ... this.sideview() ? [ this.Sideview( this.sideview() ) ] : [],
+				... this.settings() ? [ this.Settings() ] : [],
+				... this.sideview() ? [ this.Sideview( this.sideview() ) ] : [],
 			]
 		}
 
 		title() {
-			return `${ super.title() } | $hyoo_search`
+			return `${ super.title() } | библиотека`
 		}
 
 		@$mol_mem
@@ -161,7 +162,7 @@ namespace $.$$ {
 		results_raw() {
 			// console.log( this.api().search( this.query_backend() ).hits.hits );
 			
-			return this.api().search( this.query_backend() ).hits.hits
+			return this.api().search( this.query_backend() ).hits?.hits ?? []
 		}
 
 		@$mol_mem
@@ -221,12 +222,6 @@ namespace $.$$ {
 		}
 
 		@$mol_mem_key
-		result_cache( index: number ) {
-			return 'https://www.google.com/search?q='
-				+ encodeURIComponent( 'cache:' + this.result_uri( index ) )
-		}
-
-		@$mol_mem_key
 		result_words( index: number ) {
 
 			const stats = new Map<string, number>()
@@ -271,8 +266,8 @@ namespace $.$$ {
 			return all as readonly string[]
 		}
 
-		exclude_badge_title( index: number ) {
-			return '-' + this.exclude()[ index ]
+		exclude_badge_title( value: string ) {
+			return '-' +  value 
 		}
 
 		@$mol_mem_key
@@ -281,10 +276,10 @@ namespace $.$$ {
 			return names.slice( 0, -1 ).map( ( _, i ) => names.slice( i ).join( '.' ) )
 		}
 
-		// result_ban( index: number, host?: string ) {
-		// 	if( host ) this.blacklist( this.blacklist() + '\n' + host )
-		// 	return ''
-		// }
+		result_ban( index: number, host?: string ) {
+			if( host ) this.blacklist( this.blacklist() + '\n' + host )
+			return ''
+		}
 
 		@$mol_mem_key
 		result_uri( index: number ) {
@@ -310,20 +305,20 @@ namespace $.$$ {
 			}
 		}
 
-		// @$mol_mem
-		// searcher_list() {
-		// 	return this.searchers().split( '\n' ).filter( Boolean ).map( uri => uri.trim() )
-		// }
+		@$mol_mem
+		searcher_list() {
+			return this.searchers().split( '\n' ).filter( Boolean ).map( uri => uri.trim() )
+		}
 
-		// @$mol_mem
-		// searcher_links() {
-		// 	return this.searcher_list().map( ( _, i ) => this.Searcher_link( i ) )
-		// }
+		@$mol_mem
+		searcher_links() {
+			return this.searcher_list().map( ( _, i ) => this.Searcher_link( i ) )
+		}
 
-		// @$mol_mem_key
-		// searcher_link( index: number ) {
-		// 	return this.searcher_list()[ index ] + encodeURIComponent( this.query_results() )
-		// }
+		@$mol_mem_key
+		searcher_link( index: number ) {
+			return this.searcher_list()[ index ] + encodeURIComponent( this.query_results() )
+		}
 
 	}
 

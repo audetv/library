@@ -21,6 +21,49 @@ namespace $ {
 		}),
 	} ) 
 
+	interface HighlightFields {
+		fields: string[]
+		limit: number
+		no_match_size: number
+		pre_tags: string
+		post_tags: string
+	}
+
+	interface QueryString {
+		index: string
+		highlight?: HighlightFields
+		query: {
+			query_string: string
+			bool: {
+				must: {}[]
+			}
+		}
+		limit: number
+		offset: number
+		max_matches?: number
+		sort?: {}[]
+	}
+
+	const Query = (query: string ) => ({
+		index: 'library',
+		highlight: {
+			fields: [ "genre", "author", "title", "text" ],
+			limit: 0,
+			no_match_size: 0,
+			pre_tags: "<mark>",
+			post_tags: "</mark>",
+		},
+		query: {
+			query_string: query,
+			bool: {
+				must: []
+			},
+		},
+		limit: 100,
+		offset: 0,
+		max_matches: 10000,
+	})
+
 	export class $audetv_library_transport extends $mol_object2 {
 		static api_base() {
 			return 'http://library.localhost/search'
@@ -51,11 +94,12 @@ namespace $ {
 		@$mol_action
 		static search( query: string ): any {
 
+			const queryBody = Query( query )
 			return this.$.$mol_fetch.json( this.api_base(),
 			{
 				method: 'POST',
 				headers: this.headers(),
-				body: `{"index": "library", "query": {"query_string": "${ query }"},"max_matches": 10000,"limit": 10000}`,
+				body: JSON.stringify(queryBody),
 			} )
 		}
 	}

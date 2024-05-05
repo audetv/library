@@ -1,7 +1,109 @@
+#recaptcha\-wrapper {
+	margin: var(--mol_gap_block) !important;
+}
+
+#recaptcha\-wrapper a,
+#recaptcha\-wrapper .gs\-captcha\-info\-link {
+	text-decoration: none;
+	color: var(--mol_theme_control);
+}
+
 [audetv_library_app_main] {
 	flex: 1 0 40rem;
 }
 
+[audetv_library_app_sideview] {
+	flex: 10000 0 40rem;
+	box-shadow: 0 0 0 1px var(--mol_theme_line);
+	z-index: 2;
+	background: white;
+}
+
+[audetv_library_app_content] {
+	flex-direction: column;
+	padding: var(--mol_gap_block);
+}
+
+[audetv_library_app_sideview_hint] {
+	flex: 1 1 auto;
+	padding: 0 .25rem;
+	font-size: .75rem;
+	justify-content: center;
+}
+
+[audetv_library_app_sideview_embed] {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	max-height: 100%;
+	aspect-ratio: auto;
+	border-radius: 0;
+	background: transparent;
+}
+
+[audetv_library_app_settings] {
+	flex: 0 0 25rem;
+}
+
+[audetv_library_app_result_item] {
+	padding: 0;
+	background: var(--mol_theme_card);
+}
+
+[audetv_library_app_result_image] {
+	flex: 1 0 6rem;
+	max-height: 6rem;
+	object-fit: scale-down;
+}
+
+[audetv_library_app_result_info] {
+	flex: 1 1 auto;
+	flex-wrap: wrap;
+	align-items: center;
+	align-content: center;
+}
+
+[audetv_library_app_result_main] {
+	flex: 10000 1 14rem;
+}
+
+[audetv_library_app_result_title] {
+	color: var(--mol_theme_text);
+	text-shadow: 0 0;
+}
+
+[audetv_library_app_result_descr] {
+	color: var(--mol_theme_text);
+}
+
 [audetv_library_app_main_tools] {
 	flex-grow: 0;
+}
+
+[audetv_library_app_result_title_low] {
+	opacity: 1;
+}
+
+[audetv_library_app_result_descr_low] {
+	opacity: 1;
+}
+
+[audetv_library_app_result_host_low] {
+	opacity: 1;
+}
+
+[audetv_library_app_result_list] {
+	gap: var(--mol_gap_block);
+}
+
+[audetv_library_app_result_list_empty] {
+	padding: var(--mol_gap_text);
+}
+
+[audetv_library_app_attribution] {
+	padding: var(--mol_gap_text);
+}
+
+[audetv_library_app_result_ban_option_label] {
+	text-align: right;
 }
