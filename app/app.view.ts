@@ -19,10 +19,6 @@ namespace $.$$ {
 			return this.$.$mol_state_arg.value( 'query', next ) ?? ''
 		}
 
-		type( next?: string ) {
-			return this.$.$mol_state_arg.value( 'type', next ) ?? 'WWW'
-		}
-
 		where( next?: string ) {
 			return this.$.$mol_state_arg.value( 'where', next ) ?? 'anywhere'
 		}
@@ -54,7 +50,6 @@ namespace $.$$ {
 				this.query_where(),
 				this.exact() ? `"${ query }"` : query,
 				this.query_exclude(),
-				this.query_type(),
 				this.query_forbidden(),
 			].join( ' ' )
 
@@ -66,17 +61,6 @@ namespace $.$$ {
 				.split( $mol_regexp.line_end )
 				.filter( Boolean )
 				.join( ' ' )
-		}
-
-		@$mol_mem
-		query_type() {
-
-			const type = this.type()
-
-			if( type === 'WWW' ) return ''
-			if( type === 'Image' ) return ''
-
-			return `filetype:${ type }`
 		}
 
 		@$mol_mem
@@ -142,26 +126,13 @@ namespace $.$$ {
 		@$mol_mem
 		api() {
 
-			const type = [
-				'PNG',
-				'SVG',
-				'JPG',
-				'WEBP',
-				'GIF',
-				'BMP',
-				'ICO',
-				'RAW',
-				'Image'
-			].includes( this.type() ) ? 'image' : 'web'
-
 			return $mol_wire_sync( this.$.$audetv_library_transport )
-
 		}
 
 		@$mol_mem
 		results_raw() {
 			// console.log( this.api().search( this.query_backend() ).hits.hits );
-			
+
 			return this.api().search( this.query_backend() ).hits?.hits ?? []
 		}
 
