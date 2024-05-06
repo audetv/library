@@ -99,8 +99,8 @@ $audetv_library_app $mol_book2
 							<= Result_title!index $mol_dimmer
 								haystack <= result_title!index \
 								needle <= query
-							<= Result_host!index $mol_dimmer
-								haystack <= result_host!index \
+							<= Result_genre!index $mol_dimmer
+								haystack <= result_genre!index \
 								needle <= query
 							<= Result_descr!index $mol_html_view
 								html <= result_descr!index \

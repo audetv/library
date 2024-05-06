@@ -172,10 +172,11 @@ namespace $.$$ {
 
 		@$mol_mem_key
 		result_main( index: number ) {
-			return [
-				this.Result_title( index ),
+			return [				
 				// this.Result_host( index ),
 				... this.result_descr( index ) ? [ this.Result_descr( index ) ] : [],
+				this.Result_title( index ),
+				this.Result_genre( index),
 			]
 		}
 
@@ -184,17 +185,21 @@ namespace $.$$ {
 			const author = this.results_raw()[ index ][ '_source' ].author
 			const genre = this.results_raw()[ index ][ '_source' ].genre
 			const title = this.results_raw()[ index ][ '_source' ].title
-			return title + ", " + author + ", " + genre
+			// console.log(this.results_raw()[ index ][ '_source' ].genre)
+			return author + " — " + title
 		}
 
 		@$mol_mem_key
-		result_descr( index: number ) {
-			console.log(index);
-			
-			// console.log( this.results_raw()[ index ][ 'highlight' ].text )
+		result_descr( index: number ) {			
 			const descr = this.results_raw()[ index ][ 'highlight' ].text[0] ??
 			this.results_raw()[index][ '_source'].text
 			return this.result_title( index ) === descr ? '' : descr
+		}
+
+		@$mol_mem_key
+		result_genre( index: number) {
+			const genre = this.results_raw()[ index ][ '_source' ].genre ?? ''
+			return genre
 		}
 
 		result_host( index: number ) {
