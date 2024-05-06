@@ -70,6 +70,14 @@
 [audetv_library_app_result_title] {
 	color: var(--mol_theme_text);
 	text-shadow: 0 0;
+	font-family: "PT Serif", "Noto Sans Armenian", "Noto Sans Bengali", serif;
+	font-style: italic;
+	font-weight: 700;
+    line-height: 1.5;
+    padding: 5px 0;
+	font-size: 18px;
+	padding: 3px 5px 5px 0;
+    border-top: 1px solid;
 }
 
 [audetv_library_app_result_descr] {
@@ -82,6 +90,7 @@
 
 [audetv_library_app_result_title_low] {
 	opacity: 1;
+
 }
 
 [audetv_library_app_result_descr_low] {
