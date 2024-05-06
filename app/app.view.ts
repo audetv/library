@@ -56,16 +56,14 @@ namespace $.$$ {
 		}
 
 		@$mol_mem
-		query_forbidden() {
-			console.log( this.blacklist()
-				.split( $mol_regexp.line_end )
-				.filter( Boolean )
-				.join( ' ' ) );
-			
+		query_forbidden() {	
+			// todo не работает с $mol_regexp.line_end
+			// добавляет в итоговый массив разделительную строку '\n'
 			return this.blacklist()
-				.split( $mol_regexp.line_end )
+				// .split( $mol_regexp.line_end )
+				.split( '\n' )
 				.filter( Boolean )
-				.map( domain => `@author !"${ domain }"`)
+				.map( domain => `@author !"${ domain }"` )
 				.join( ' ' )
 		}
 
@@ -137,9 +135,13 @@ namespace $.$$ {
 
 		@$mol_mem
 		results_raw() {
-			// console.log( this.api().search( this.query_backend() ).hits.hits );
+			// console.log( this.api().search( this.query_backend() ).hits )
+			return this.api().search( this.query_backend() ).hits
+		}
 
-			return this.api().search( this.query_backend() ).hits?.hits ?? []
+		@$mol_mem
+		total() {
+			return Number(this.api().search( this.query_backend() ).hits.total)
 		}
 
 		@$mol_mem
@@ -155,24 +157,24 @@ namespace $.$$ {
 
 		@$mol_mem
 		result_list() {
-			return this.results_raw().map( ( _:any, i:number ) => this.Result_item( i ) )
+			return this.results_raw().hits.map( ( _:any, i:number ) => this.Result_item( i ) )
 		}
 
 		@$mol_mem_key
 		result_image( index: number ) {
-			const res = this.results_raw()[ index ]
+			const res = this.results_raw().hits[ index ]
 			return res.thumbnailImage?.url ?? this.result_icon( index )
 		}
 
 		@$mol_mem_key
 		result_icon( index: number ) {
-			const res = this.results_raw()[ index ]
+			const res = this.results_raw().hits[ index ]
 			return `https://favicon.yandex.net/favicon/${ res.visibleUrl }?color=0,0,0,0&size=32&stub=1`
 		}
 
 		@$mol_mem_key
 		result_main( index: number ) {
-			return [				
+			return [
 				// this.Result_host( index ),
 				... this.result_descr( index ) ? [ this.Result_descr( index ) ] : [],
 				this.Result_title( index ),
@@ -182,28 +184,29 @@ namespace $.$$ {
 
 		@$mol_mem_key
 		result_title( index: number ) {
-			const author = this.results_raw()[ index ][ '_source' ].author
-			const genre = this.results_raw()[ index ][ '_source' ].genre
-			const title = this.results_raw()[ index ][ '_source' ].title
+			const author = this.results_raw().hits[ index ][ '_source' ].author
+			// const genre = this.results_raw().hits[ index ][ '_source' ].genre
+			const title = this.results_raw().hits[ index ][ '_source' ].title
 			// console.log(this.results_raw()[ index ][ '_source' ].genre)
 			return author + " — " + title
 		}
 
 		@$mol_mem_key
 		result_descr( index: number ) {			
-			const descr = this.results_raw()[ index ][ 'highlight' ].text[0] ??
-			this.results_raw()[index][ '_source'].text
+			const descr = this.results_raw().hits[ index ][ 'highlight' ].text[0] ??
+			this.results_raw().hits[index][ '_source'].text
 			return this.result_title( index ) === descr ? '' : descr
 		}
 
 		@$mol_mem_key
 		result_genre( index: number) {
-			const genre = this.results_raw()[ index ][ '_source' ].genre ?? ''
+			const genre = this.results_raw().hits[ index ][ '_source' ].genre ?? ''
 			return genre
 		}
 
 		result_host( index: number ) {
-			return this.results_raw()[ index ][ '_source' ].title ?? ''
+			console.log( this.results_raw().hits[ index ][ '_source' ].author ?? '')
+			return this.results_raw().hits[ index ][ '_source' ].author ?? ''
 		}
 
 		@$mol_mem_key
@@ -228,7 +231,7 @@ namespace $.$$ {
 		words() {
 
 			const total = new Map<string, number>()
-			const results = this.results_raw()
+			const results = this.results_raw().hits
 
 			for( let i = 0; i < results.length; ++i ) {
 
@@ -258,24 +261,32 @@ namespace $.$$ {
 		@$mol_mem_key
 		result_ban_options( index: number ) {
 			const names = this.result_host( index ).split( '.' )
-			return names.slice( 0, -1 ).map( ( _: any, i: number ) => names.slice( i ).join( '.' ) )
+			console.log( names )
+			// return names.slice( 0, -1 ).map( ( _: any, i: number ) => names.slice( i ).join( '.' ) )
+			return names
 		}
 
 		result_ban( index: number, host?: string ) {
-			if( host ) this.blacklist( this.blacklist() + '\n' + host )
+
+			if( host && this.blacklist().length > 0) {
+				this.blacklist( this.blacklist() + '\n' + host )
+			}
+			if (host && this.blacklist().length === 0) {
+				this.blacklist( this.blacklist() + host )
+			}
 			return ''
 		}
 
 		@$mol_mem_key
 		result_uri( index: number ) {
-			const res = this.results_raw()[ index ]
+			const res = this.results_raw().hits[ index ]
 			if( res.url ) return new URL( res.url ).searchParams.get( 'q' )!
 			return res.contextUrl!
 		}
 
 		@$mol_mem_key
 		result_embed( index: number ) {
-			const res = this.results_raw()[ index ]
+			const res = this.results_raw().hits[ index ]
 			if( res.url ) return new URL( res.url ).searchParams.get( 'q' )!
 			return res.image!.url
 		}
@@ -303,6 +314,22 @@ namespace $.$$ {
 		@$mol_mem_key
 		searcher_link( index: number ) {
 			return this.searcher_list()[ index ] + encodeURIComponent( this.query_results() )
+		}
+
+		/**
+		 * Generates a summary of the result.
+		 *
+		 * @return {string} The summary of the result in the format "Найдено записей {total}"
+		 * where {total} is the total number of records found.
+		 */
+		result_summary(): string {
+			const total = this.results_raw().total.toString()
+			const groups = total.split( '' ).reverse().reduce( ( groups: string[], digit: string, i: number, src: string[] ) => {
+				if( i && i % 3 === 0 ) groups.push( ' ' )
+				groups.push( digit )
+				return groups
+			}, [] ).reverse()
+			return `Найдено записей ${groups.join( '' )}`
 		}
 
 	}

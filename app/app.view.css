@@ -45,6 +45,11 @@
 	flex: 0 0 25rem;
 }
 
+[audetv_library_app_result_summary] {
+	font-weight: 700;
+	padding-bottom: 14px;
+}
+
 [audetv_library_app_result_item] {
 	padding: 0;
 	background: var(--mol_theme_card);

@@ -38,6 +38,8 @@ $audetv_library_app $mol_book2
 					sub /
 						<= Settings_open_icon $mol_icon_settings
 			body_content / <= Content $mol_view sub <= main_content /
+				<= Result_summary $mol_paragraph
+					sub / <= result_summary
 				<= Error $mol_view sub / <= error null
 				<= Result_list $mol_list
 					rows <= result_list /
@@ -70,12 +72,10 @@ $audetv_library_app $mol_book2
 									\https://yandex.ru/search/?text=
 									\https://www.google.com/search?q=
 						<= Blacklist_field $mol_form_field
-							name \Чёрный Список Доменов
+							name \Исключенные авторы
 							Content <= Blacklist $mol_textarea
-								hint \Каждый домен на новой строке
+								hint \Каждый автор на новой строке
 								value?next <=> blacklist?next \
-									\pinterest.com
-									\itnan.ru
 						<= Query_dump_field $mol_form_field
 							name \Полный Запрос
 							Content <= Query_dump $mol_text_code
@@ -108,7 +108,7 @@ $audetv_library_app $mol_book2
 				rows /
 					<= Result_ban!index $mol_select
 						Trigger_icon <= Result_ban_icon!index $mol_icon_close
-						hint \Забанить сайт…
+						hint \Исключить автора…
 						Filter null
 						align_hor \left
 						options <= result_ban_options!index /string

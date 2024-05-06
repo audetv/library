@@ -47,7 +47,7 @@ namespace $ {
 	const Query = (query: string ) => ({
 		index: 'library',
 		highlight: {
-			fields: [ "genre", "author", "title", "text" ],
+			fields: [ "text" ],
 			limit: 0,
 			no_match_size: 0,
 			pre_tags: "<strong>",
@@ -59,7 +59,7 @@ namespace $ {
 				must: []
 			},
 		},
-		limit: 100,
+		limit: 1000,
 		offset: 0,
 		max_matches: 10000,
 	})
