@@ -4,6 +4,8 @@ $audetv_library_app $mol_book2
 	Placeholder null
 	query_results?next \
 	pages /
+		<= Left $mol_page
+			title \Рубрика
 		<= Main $mol_page
 			title <= query
 			bring <= main_bring

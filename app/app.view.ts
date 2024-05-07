@@ -106,6 +106,7 @@ namespace $.$$ {
 		@$mol_mem
 		pages() {
 			return [
+				this.Left(),
 				this.Gap( 'left' ),
 				this.Main(),
 				this.Gap( 'right' ),
