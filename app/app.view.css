@@ -127,3 +127,7 @@
 	color: var(--mol_theme_focus);
 	text-shadow: 0 0;
 }
+
+[audetv_library_app_main_foot] {
+	padding: 0;
+}
