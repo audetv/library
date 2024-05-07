@@ -106,7 +106,9 @@ namespace $.$$ {
 		@$mol_mem
 		pages() {
 			return [
+				this.Gap( 'left' ),
 				this.Main(),
+				this.Gap( 'right' ),
 				... this.settings() ? [ this.Settings() ] : [],
 				... this.sideview() ? [ this.Sideview( this.sideview() ) ] : [],
 			]
