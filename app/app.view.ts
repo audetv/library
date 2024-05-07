@@ -73,7 +73,7 @@ namespace $.$$ {
 			const where = this.where()
 			if( where === 'anywhere' ) return ''
 
-			return `${ where }:`
+			return `${ where }`
 		}
 
 		@$mol_mem

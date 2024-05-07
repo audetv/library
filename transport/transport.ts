@@ -55,9 +55,6 @@ namespace $ {
 		},
 		query: {
 			query_string: query,
-			bool: {
-				must: []
-			},
 		},
 		limit: 1000,
 		offset: 0,
