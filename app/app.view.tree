@@ -88,9 +88,7 @@ $audetv_library_app $mol_book2
 			<= Sideview_embed!uri $mol_embed_native
 				uri <= sideview?val \about:blank
 				sub /
-	Result_item!index $mol_link
-		uri <= result_uri!index \
-		target \search_result
+	Result_item!index $mol_view
 		sub /
 			<= Result_info!index $mol_row
 				sub /
