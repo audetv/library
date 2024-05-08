@@ -33,8 +33,6 @@ $audetv_library_app $mol_book2
 						anywhere \Везде
 						@title \Заголовок
 						@text \Текст
-						@author \Автор
-						@genre \Рубрика
 				<= Settings_open $mol_link
 					arg * settings \
 					sub /

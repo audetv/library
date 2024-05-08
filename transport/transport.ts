@@ -44,8 +44,30 @@ namespace $ {
 		sort?: {}[]
 	}
 
+	const aggs = {
+		book_genre: {
+			terms: {
+				field: "genre",
+				size: 1000
+			}
+		},
+		book_author: {
+			terms: {
+				field: "author",
+				size: 1000
+			}
+		},
+		book_title: {
+			terms: {
+				field: "title",
+				size: 10000
+			}
+		}
+	}
+
 	const Query = (query: string ) => ({
 		index: 'library',
+		aggs: aggs,
 		highlight: {
 			fields: [ "text" ],
 			limit: 0,
