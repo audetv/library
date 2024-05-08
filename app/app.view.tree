@@ -140,7 +140,7 @@ $audetv_library_app $mol_book2
 	Searcher_link!id $mol_link_iconed
 		title \
 		uri <= searcher_link!id \
-
+	
 	Filter_aspect!id $mol_list rows /
 		<= Filter_aspect_title!id $mol_view sub / <= key!id \
 		<= Filter_aspect_tags!id $mol_row sub <= filter_aspect_tags!id /

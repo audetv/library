@@ -1,3 +1,4 @@
-include \/mol/offline/install
-
 deploy \/audetv/libray/logo/zvezda.svg
+deploy \/audetv/library/app/_games.tree
+
+include \/mol/offline/install

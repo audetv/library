@@ -131,3 +131,163 @@
 [audetv_library_app_main_foot] {
 	padding: 0;
 }
+
+[audetv_library_app_filter] {
+	flex: 0 0 16rem;
+	width: 400px;
+	max-width: 75%;
+}
+
+[audetv_library_app_gists] {
+	flex: 0 0 24rem;
+}
+
+
+
+[audetv_library_app_gists_search] {
+	align-self: stretch;
+	flex: none;
+}
+
+[audetv_library_app_gist] {
+	flex: 1000 0 30rem;
+}
+
+[audetv_library_app_gist_body] {
+	display: flex;
+	flex-direction: column;
+	padding: var(--mol_gap_block);
+}
+
+[audetv_library_app_filter_body] {
+	padding: 0;
+}
+
+[audetv_library_app_gist_content] {
+	padding: 0;
+}
+
+[audetv_library_app_filter_aspect] {
+	padding: .75rem;
+	display :flex;
+	flex-direction: column;
+	box-shadow: 0 0 0 1px var(--mol_theme_line);
+	background: var(--mol_theme_back);
+}
+
+[audetv_library_app_filter_aspect_title] {
+	padding: .5rem .75rem;
+	font-weight: 600;
+}
+
+[audetv_library_app_filter_aspect_tags] {
+	padding: 0;
+}
+
+[audetv_library_app_filter_tag] {
+	margin: 0;
+	font-weight: 600;
+}
+
+[audetv_library_app_filter_tag][mol_check_checked] {
+}
+
+[audetv_library_app_gists_favorite] {
+	align-items: center;
+	flex-direction: row-reverse;
+}
+
+[audetv_library_app_gists_favorite_duration] {
+	margin-right: .25rem;
+	color: var(--mol_theme_text);
+}
+
+[audetv_library_app_gist_favorite] {
+	align-items: center;
+}
+
+[audetv_library_app_gist_link] {
+	display: flex;
+}
+
+[audetv_library_app_gist_link_icon] {
+    width: 1.5rem;
+    text-align: center;
+	padding-right: .5rem;
+}
+
+[audetv_library_app_gist_link_title] {
+	flex: 1 1 auto;
+}
+
+[audetv_library_app_gist_content] {
+	box-shadow: none;
+}
+
+[audetv_library_app_gist_aspect] {
+	font-weight: 600;
+}
+
+[audetv_library_app_gist_aspect] > * ,
+[audetv_library_app_gist_aspect] > * > * {
+	margin: 0 .25rem;
+}
+
+[audetv_library_app_gist_remarks] {
+	margin-top: .5rem;
+	flex: 1 0 auto;
+}
+
+[audetv_library_app_tag_id="Любой"] { color: hsl( 100 , 80% , 40% ) }
+[audetv_library_app_tag_id="Малыши"] { color: hsl( 340 , 80% , 40% ) }
+[audetv_library_app_tag_id="Среднячки"] { color: hsl( 280 , 80% , 40% ) }
+[audetv_library_app_tag_id="Старшаки"] { color: hsl( 40 , 80% , 40% ) }
+
+[audetv_library_app_tag_id="Внимание"] { color: hsl( 0 , 80% , 40% ) }
+[audetv_library_app_tag_id="Знакомство"] { color: hsl( 50 , 80% , 40% ) }
+[audetv_library_app_tag_id="Раскрепощение"] { color: hsl( 100 , 80% , 40% ) }
+[audetv_library_app_tag_id="Разминка"] { color: hsl( 150 , 80% , 40% ) }
+[audetv_library_app_tag_id="Творчество"] { color: hsl( 200 , 80% , 40% ) }
+[audetv_library_app_tag_id="Сплочение"] { color: hsl( 250 , 80% , 40% ) }
+[audetv_library_app_tag_id="Обратная связь"] { color: hsl( 300 , 80% , 40% ) }
+[audetv_library_app_tag_id="Обсуждение"] { color: hsl( 350 , 80% , 40% ) }
+[audetv_library_app_tag_id="Лидерство"] { color: hsl( 30 , 80% , 40% ) }
+[audetv_library_app_tag_id="Доверие"] { color: hsl( 80 , 80% , 40% ) }
+[audetv_library_app_tag_id="Усвоение"] { color: hsl( 130 , 80% , 40% ) }
+[audetv_library_app_tag_id="Мышление"] { color: hsl( 180 , 80% , 40% ) }
+[audetv_library_app_tag_id="Развлечение"] { color: hsl( 230 , 80% , 40% ) }
+
+[audetv_library_app_tag_id="Нет"] { color: hsl( 100 , 80% , 40% ) }
+[audetv_library_app_tag_id="Особый"] { color: hsl( 150 , 80% , 40% ) }
+[audetv_library_app_tag_id="Бумага"] { color: hsl( 200 , 80% , 40% ) }
+[audetv_library_app_tag_id="Скотч"] { color: hsl( 250 , 80% , 40% ) }
+[audetv_library_app_tag_id="Стикеры"] { color: hsl( 300 , 80% , 40% ) }
+[audetv_library_app_tag_id="Карандаши"] { color: hsl( 350 , 80% , 40% ) }
+[audetv_library_app_tag_id="Ручки"] { color: hsl( 40 , 80% , 40% ) }
+[audetv_library_app_tag_id="Платочек"] { color: hsl( 90 , 80% , 40% ) }
+[audetv_library_app_tag_id="Удобная обувь"] { color: hsl( 140 , 80% , 40% ) }
+[audetv_library_app_tag_id="Мешочек"] { color: hsl( 190 , 80% , 40% ) }
+[audetv_library_app_tag_id="Стол"] { color: hsl( 240 , 80% , 40% ) }
+
+[audetv_library_app_tag_id="Нет"] { color: hsl( 100 , 80% , 40% ) }
+[audetv_library_app_tag_id="1 минута"] { color: hsl( 150 , 80% , 40% ) }
+[audetv_library_app_tag_id="5 минут"] { color: hsl( 200 , 80% , 40% ) }
+[audetv_library_app_tag_id="10 минут"] { color: hsl( 250 , 80% , 40% ) }
+[audetv_library_app_tag_id="20 минут"] { color: hsl( 300 , 80% , 40% ) }
+[audetv_library_app_tag_id="30 минут"] { color: hsl( 350 , 80% , 40% ) }
+[audetv_library_app_tag_id="40 минут"] { color: hsl( 40 , 80% , 40% ) }
+
+[audetv_library_app_tag_id="Любое"] { color: hsl( 100 , 80% , 40% ) }
+[audetv_library_app_tag_id="Зал"] { color: hsl( 150 , 80% , 40% ) }
+[audetv_library_app_tag_id="Просторное"] { color: hsl( 200 , 80% , 40% ) }
+[audetv_library_app_tag_id="Тихое"] { color: hsl( 250 , 80% , 40% ) }
+
+[audetv_library_app_feedback] {
+	display: block;
+	padding: .5rem 1.5rem;
+}
+
+:not([mol_check_checked]) > [audetv_library_app_filter_tag_title] {
+	color: var(--mol_theme_shade);
+}
+
