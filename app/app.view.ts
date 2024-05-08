@@ -154,7 +154,7 @@ namespace $.$$ {
 		@$mol_mem
 		results_raw() {
 			// console.log( this.api().search( this.query_backend() ).hits )
-			return this.api().search( this.query_backend() ).hits
+			return this.api().search( this.query_backend() )
 		}
 
 		@$mol_mem
@@ -175,18 +175,18 @@ namespace $.$$ {
 
 		@$mol_mem
 		result_list() {
-			return this.results_raw().hits.map( ( _:any, i:number ) => this.Result_item( i ) )
+			return this.results_raw().hits.hits.map( ( _:any, i:number ) => this.Result_item( i ) )
 		}
 
 		@$mol_mem_key
 		result_image( index: number ) {
-			const res = this.results_raw().hits[ index ]
+			const res = this.results_raw().hits.hits[ index ]
 			return res.thumbnailImage?.url ?? this.result_icon( index )
 		}
 
 		@$mol_mem_key
 		result_icon( index: number ) {
-			const res = this.results_raw().hits[ index ]
+			const res = this.results_raw().hits.hits[ index ]
 			return `https://favicon.yandex.net/favicon/${ res.visibleUrl }?color=0,0,0,0&size=32&stub=1`
 		}
 
@@ -202,29 +202,29 @@ namespace $.$$ {
 
 		@$mol_mem_key
 		result_title( index: number ) {
-			const author = this.results_raw().hits[ index ][ '_source' ].author
+			const author = this.results_raw().hits.hits[ index ][ '_source' ].author
 			// const genre = this.results_raw().hits[ index ][ '_source' ].genre
-			const title = this.results_raw().hits[ index ][ '_source' ].title
+			const title = this.results_raw().hits.hits[ index ][ '_source' ].title
 			// console.log(this.results_raw()[ index ][ '_source' ].genre)
 			return author + " — " + title
 		}
 
 		@$mol_mem_key
 		result_descr( index: number ) {			
-			const descr = this.results_raw().hits[ index ][ 'highlight' ].text[0] ??
+			const descr = this.results_raw().hits.hits[ index ][ 'highlight' ].text[0] ??
 			this.results_raw().hits[index][ '_source'].text
 			return this.result_title( index ) === descr ? '' : descr
 		}
 
 		@$mol_mem_key
 		result_genre( index: number) {
-			const genre = this.results_raw().hits[ index ][ '_source' ].genre ?? ''
+			const genre = this.results_raw().hits.hits[ index ][ '_source' ].genre ?? ''
 			return genre
 		}
 
 		result_host( index: number ) {
-			console.log( this.results_raw().hits[ index ][ '_source' ].author ?? '')
-			return this.results_raw().hits[ index ][ '_source' ].author ?? ''
+			console.log( this.results_raw().hits.hits[ index ][ '_source' ].author ?? '')
+			return this.results_raw().hits.hits[ index ][ '_source' ].author ?? ''
 		}
 
 		@$mol_mem_key
@@ -249,7 +249,7 @@ namespace $.$$ {
 		words() {
 
 			const total = new Map<string, number>()
-			const results = this.results_raw().hits
+			const results = this.results_raw().hits.hits
 
 			for( let i = 0; i < results.length; ++i ) {
 
@@ -297,14 +297,14 @@ namespace $.$$ {
 
 		@$mol_mem_key
 		result_uri( index: number ) {
-			const res = this.results_raw().hits[ index ]
+			const res = this.results_raw().hits.hits[ index ]
 			if( res.url ) return new URL( res.url ).searchParams.get( 'q' )!
 			return res.contextUrl!
 		}
 
 		@$mol_mem_key
 		result_embed( index: number ) {
-			const res = this.results_raw().hits[ index ]
+			const res = this.results_raw().hits.hits[ index ]
 			if( res.url ) return new URL( res.url ).searchParams.get( 'q' )!
 			return res.image!.url
 		}
@@ -341,7 +341,7 @@ namespace $.$$ {
 		 * where {total} is the total number of records found.
 		 */
 		result_summary(): string {
-			const total = this.results_raw().total.toString()
+			const total = this.results_raw().hits.total.toString()
 			const groups = total.split( '' ).reverse().reduce( ( groups: string[], digit: string, i: number, src: string[] ) => {
 				if( i && i % 3 === 0 ) groups.push( ' ' )
 				groups.push( digit )
@@ -355,9 +355,9 @@ namespace $.$$ {
 		@ $mol_mem
 		data() {
 			//TODO aggregations, нужно рефакторить this.results_raw()
-			// const text = $mol_fetch.text( 'hyoo/scout/_games.tree' )
-			const text = this.results_raw().aggregations
-			console.log( text )
+			const text = $mol_fetch.text( 'hyoo/scout/_games.tree' )
+			const aggr = this.results_raw().aggregations
+			console.log( aggr )
 			const json = this.$.$mol_tree2_from_string( text ).kids.map( tree => this.$.$mol_tree2_to_json(tree.struct('*', tree.kids)) )
 			return json as  $audetv_library_gist[]
 		}
@@ -459,11 +459,11 @@ namespace $.$$ {
 			return this.$.$mol_state_local.value( `${ this }.gist_remarks(${ JSON.stringify( id ) })` , next ) || ''
 		}
 
-		gist_aspect_tags( aspect : keyof $hyoo_scout_gist['tags'] ) {
+		gist_aspect_tags( aspect: keyof $audetv_library_gist['tags'] ) {
 			return this.gist_current()!.tags[ aspect ].map( ( tag : string ) => this.Gist_tag({ aspect , tag }) )
 		}
 
-		gist_current( next? : $hyoo_scout_gist | null ) {
+		gist_current( next?: $audetv_library_gist | null ) {
 
 			const id = this.$.$mol_state_arg.value( 'gist' , next && next.title )
 			if( !id ) return null
@@ -472,13 +472,16 @@ namespace $.$$ {
 		}
 
 		filter_aspects() {
-			return ( Object.keys( $hyoo_scout_gist.make({}).tags ) as ( keyof $hyoo_scout_gist['tags'] )[] )
+
+			console.log( Object.keys( $audetv_library_gist.make( {} ).tags ))
+
+			return ( Object.keys( $audetv_library_gist.make( {} ).tags ) as ( keyof $audetv_library_gist['tags'] )[] )
 			.filter( aspect => this.filter_aspect_tags( aspect ).length > 1 )
 			.map( aspect => this.Filter_aspect( aspect ) )
 		}
 
 		@ $mol_mem_key
-		filter_aspect_tags( aspect : keyof $hyoo_scout_gist['tags'] ) {
+		filter_aspect_tags( aspect: keyof $audetv_library_gist['tags'] ) {
 
 			const values = new Set< string >()
 			
