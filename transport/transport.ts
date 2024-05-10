@@ -16,10 +16,10 @@ namespace $ {
 					text: $mol_data_string,
 					position: $mol_data_integer,
 					length: $mol_data_integer,
-				})
-			}))
-		}),
-	} ) 
+				} )
+			} ) )
+		} ),
+	} )
 
 	interface HighlightFields {
 		fields: string[]
@@ -31,12 +31,11 @@ namespace $ {
 
 	interface QueryString {
 		index: string
+		aggs: Aggs
 		highlight?: HighlightFields
-		query: {
+		query?: {
 			query_string: string
-			bool: {
-				must: {}[]
-			}
+			equals?: { [ key: string ]: any }
 		}
 		limit: number
 		offset: number
@@ -44,44 +43,63 @@ namespace $ {
 		sort?: {}[]
 	}
 
+	interface Aggs {
+		[ key: string ]: any
+	}
+
 	const aggs = {
 		book_genre: {
 			terms: {
 				field: "genre",
-				size: 1000
+				size: 10
 			}
 		},
 		book_author: {
 			terms: {
 				field: "author",
-				size: 1000
+				size: 10
 			}
 		},
 		book_title: {
 			terms: {
 				field: "title",
-				size: 10000
+				size: 10
 			}
 		}
 	}
 
-	const Query = (query: string ) => ({
-		index: 'library',
-		aggs: aggs,
-		highlight: {
-			fields: [ "text" ],
-			limit: 0,
-			no_match_size: 0,
-			pre_tags: "<strong>",
-			post_tags: "</strong>",
-		},
-		query: {
+	const Query: ( query: string, filter?: string|null ) => QueryString = ( query: string, filter?: string|null ) => {
+
+		console.log( "transport.Query", query, "filter", filter );
+
+		const queryBody: QueryString = {
+			index: 'library',
+			aggs: aggs,
+			limit: 10,
+			offset: 0,
+			max_matches: 10000,
+		}
+		if( query !== '' ) {
+			queryBody.highlight = {
+				fields: [ "text" ],
+				limit: 0,
+				no_match_size: 0,
+				pre_tags: "<strong>",
+				post_tags: "</strong>",
+			}
+				
+		}
+
+		queryBody.query = {
 			query_string: query,
-		},
-		limit: 1000,
-		offset: 0,
-		max_matches: 10000,
-	})
+			// equals: { author: filter || '' }
+		}
+
+		// if (queryBody.query && filter) {
+		// 	queryBody.query.equals = { author: filter || ''}
+		// }
+		return queryBody
+	}
 
 	export class $audetv_library_transport extends $mol_object2 {
 		static api_base() {
@@ -111,15 +129,17 @@ namespace $ {
 		}
 
 		@$mol_action
-		static search( query: string ): any {
+		static search( query: string, filter?: string  ): any {
 
-			const queryBody = Query( query )
+			// console.log( "transport.search", query, "filter", filter );
+
+			const queryBody = Query( query, filter )
 			return this.$.$mol_fetch.json( this.api_base(),
-			{
-				method: 'POST',
-				headers: this.headers(),
-				body: JSON.stringify(queryBody),
-			} )
+				{
+					method: 'POST',
+					headers: this.headers(),
+					body: JSON.stringify( queryBody ),
+				} )
 		}
 	}
 }

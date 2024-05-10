@@ -5,33 +5,6 @@ $audetv_library_app $mol_book2
 	Placeholder null
 	query_results?next \
 	pages /
-		<= Filter $mol_page
-			title \Фильтры
-			body /
-				<= Filter_aspects $mol_list rows <= filter_aspects /
-				<= Feedback $mol_link
-					title \Ошибки? Предложения?
-					uri \https://svodd.ru/contact
-		<= Gists $mol_page
-			title <= gists_title \Наименование книги
-			tools /
-				<= Suggest_link $mol_link
-					arg *
-						suggest \
-						gist null
-					sub /
-						<= Suggest_icon $mol_icon_plus
-				<= Gists_favorite $mol_check_icon
-					hint \Только избранное
-					checked?val <=> gists_favorite?val false
-					Icon <= Gists_favorite_icon $mol_icon_favorite
-					label <= gists_favorite_label /
-						<= Gists_favorite_duration $mol_view
-							sub / <= gists_favorite_duration \
-			body /
-				<= Gists_search $mol_search
-					query?val <=> gists_filter_query?val \
-				<= Gists_list $mol_list rows <= gist_links /
 		<= Main $mol_page
 			title <= query
 			bring <= main_bring
@@ -72,7 +45,7 @@ $audetv_library_app $mol_book2
 					Empty <= Result_list_empty $mol_view
 						sub /
 							<= result_list_empty \Нет результатов
-			foot <= searcher_links /
+			- foot <= searcher_links /
 		<= Settings $mol_page
 			title \Настройки
 			tools /
@@ -140,48 +113,3 @@ $audetv_library_app $mol_book2
 	Searcher_link!id $mol_link_iconed
 		title \
 		uri <= searcher_link!id \
-	
-	Filter_aspect!id $mol_list rows /
-		<= Filter_aspect_title!id $mol_view sub / <= key!id \
-		<= Filter_aspect_tags!id $mol_row sub <= filter_aspect_tags!id /
-	Filter_tag!id $mol_check
-		checked?val <=> filter_tag_checked!id?val true
-		label /
-			<= Filter_tag_title!id $mol_view
-				attr * audetv_library_app_tag_id <= tag_title!id \
-				sub / <= tag_title!id \
-	
-	Gist_link!id $mol_link
-		sub /
-			<= Gist_link_icon!id $mol_view sub / <= gist_icon!id \
-			<= Gist_link_title!id $mol_dimmer
-				needle <= gists_filter_query
-				haystack <= gist_title!id \
-		arg *
-			gist <= key!id \
-			suggest null
-	
-	Gist!id $mol_page
-		title <= gist_title!id \
-		tools /
-			<= Gist_favorite!id $mol_check_icon
-				checked?val <=> gist_favorite!id?val false
-				Icon <= Gist_favorite_icon $mol_icon_favorite
-			<= Gist_close $mol_link
-				arg * gist null
-				sub / <= Gist_close_icon $mol_icon_close
-		body /
-			<= Gist_content!id $mol_text text <= gist_content!id \
-			<= Gist_aspects!id $mol_list rows <= gist_aspects!id /
-			<= Gist_remarks!id $mol_textarea
-				hint \Личные заметки
-				value?val <=> gist_remarks!id?val \
-	
-	Gist_aspect!id $mol_row sub /
-		<= Gist_aspect_title!id $mol_view sub /
-			<= key!id \
-			\: 
-		<= Gist_aspect_tags!id $mol_view sub <= gist_aspect_tags!id /
-	Gist_tag!id $mol_view
-		attr * audetv_library_app_tag_id <= tag_title!id \
-		sub / <= tag_title!id \

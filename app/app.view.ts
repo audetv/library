@@ -2,20 +2,6 @@ namespace $.$$ {
 
 	const Words = $mol_regexp.repeat_greedy( $mol_regexp.unicode_only( 'Alphabetic' ), 1 )
 
-	export class $audetv_library_gist extends $mol_object {
-		icon = ''
-		title = ''
-		tags = {
-			Возраст: [] as string[],
-			Реквизит: [] as string[],
-			Подготовка: [] as string[],
-			Цель: [] as string[],
-			Место: [] as string[],
-			Длительность: [] as string[],
-		}
-		content! : string
-	}
-
 	export class $audetv_library_app extends $.$audetv_library_app {
 
 		@$mol_memo.field
@@ -56,7 +42,6 @@ namespace $.$$ {
 
 		@$mol_mem
 		query_backend() {
-
 			const query = this.query_results().trim()
 			if( !query ) return ''
 
@@ -70,7 +55,8 @@ namespace $.$$ {
 		}
 
 		@$mol_mem
-		query_forbidden() {	
+		query_forbidden() {
+			console.log( "query_forbidden" )
 			// todo не работает с $mol_regexp.line_end
 			// добавляет в итоговый массив разделительную строку '\n'
 			return this.blacklist()
@@ -120,9 +106,9 @@ namespace $.$$ {
 		@$mol_mem
 		pages() {
 			return [
-				this.Filter(),
-				this.Gists(),
-				// this.Gap( 'left' ),
+				// this.Filter(),
+				// this.Gists(),
+				this.Gap( 'left' ),
 				this.Main(),
 				this.Gap( 'right' ),
 				... this.settings() ? [ this.Settings() ] : [],
@@ -136,6 +122,7 @@ namespace $.$$ {
 
 		@$mol_mem
 		main_content() {
+			console.log( "main_content" )
 			if( !this.query_backend() ) return []
 			return super.main_content()
 		}
@@ -153,13 +140,13 @@ namespace $.$$ {
 
 		@$mol_mem
 		results_raw() {
-			// console.log( this.api().search( this.query_backend() ).hits )
+			// console.log( this.api().search( this.query_backend() ) )
 			return this.api().search( this.query_backend() )
 		}
 
 		@$mol_mem
 		total() {
-			return Number(this.api().search( this.query_backend() ).hits.total)
+			return Number( this.api().search( this.query_backend() ).hits.total )
 		}
 
 		@$mol_mem
@@ -170,12 +157,15 @@ namespace $.$$ {
 
 		@$mol_action
 		submit() {
+			console.log( "submit" )
 			this.query_results( this.query() )
 		}
 
 		@$mol_mem
 		result_list() {
-			return this.results_raw().hits.hits.map( ( _:any, i:number ) => this.Result_item( i ) )
+			console.log( "result_list" )
+
+			return this.results_raw().hits?.hits.map( ( _: any, i: number ) => this.Result_item( i ) ) || []
 		}
 
 		@$mol_mem_key
@@ -196,7 +186,7 @@ namespace $.$$ {
 				// this.Result_host( index ),
 				... this.result_descr( index ) ? [ this.Result_descr( index ) ] : [],
 				this.Result_title( index ),
-				this.Result_genre( index),
+				this.Result_genre( index ),
 			]
 		}
 
@@ -210,20 +200,20 @@ namespace $.$$ {
 		}
 
 		@$mol_mem_key
-		result_descr( index: number ) {			
-			const descr = this.results_raw().hits.hits[ index ][ 'highlight' ].text[0] ??
-			this.results_raw().hits[index][ '_source'].text
+		result_descr( index: number ) {
+			const descr = this.results_raw().hits.hits[ index ][ 'highlight' ].text[ 0 ] ??
+				this.results_raw().hits[ index ][ '_source' ].text
 			return this.result_title( index ) === descr ? '' : descr
 		}
 
 		@$mol_mem_key
-		result_genre( index: number) {
+		result_genre( index: number ) {
 			const genre = this.results_raw().hits.hits[ index ][ '_source' ].genre ?? ''
 			return genre
 		}
 
 		result_host( index: number ) {
-			console.log( this.results_raw().hits.hits[ index ][ '_source' ].author ?? '')
+			console.log( this.results_raw().hits.hits[ index ][ '_source' ].author ?? '' )
 			return this.results_raw().hits.hits[ index ][ '_source' ].author ?? ''
 		}
 
@@ -273,7 +263,7 @@ namespace $.$$ {
 		}
 
 		exclude_badge_title( value: string ) {
-			return '-' +  value 
+			return '-' + value
 		}
 
 		@$mol_mem_key
@@ -286,10 +276,10 @@ namespace $.$$ {
 
 		result_ban( index: number, host?: string ) {
 
-			if( host && this.blacklist().length > 0) {
+			if( host && this.blacklist().length > 0 ) {
 				this.blacklist( this.blacklist() + '\n' + host )
 			}
-			if (host && this.blacklist().length === 0) {
+			if( host && this.blacklist().length === 0 ) {
 				this.blacklist( this.blacklist() + host )
 			}
 			return ''
@@ -341,174 +331,15 @@ namespace $.$$ {
 		 * where {total} is the total number of records found.
 		 */
 		result_summary(): string {
+
+			if( this.results_raw().hits === undefined ) return ''
 			const total = this.results_raw().hits.total.toString()
 			const groups = total.split( '' ).reverse().reduce( ( groups: string[], digit: string, i: number, src: string[] ) => {
 				if( i && i % 3 === 0 ) groups.push( ' ' )
 				groups.push( digit )
 				return groups
 			}, [] ).reverse()
-			return `Найдено записей ${groups.join( '' )}`
-		}
-
-		// scout gists
-
-		@ $mol_mem
-		data() {
-			//TODO aggregations, нужно рефакторить this.results_raw()
-			const text = $mol_fetch.text( 'hyoo/scout/_games.tree' )
-			const aggr = this.results_raw().aggregations
-			console.log( aggr )
-			const json = this.$.$mol_tree2_from_string( text ).kids.map( tree => this.$.$mol_tree2_to_json(tree.struct('*', tree.kids)) )
-			return json as  $audetv_library_gist[]
-		}
-
-		key( key : string ) {
-			return key
-		}
-
-		gists_title() {
-			return `${ super.gists_title() } (${ this.gist_links().length } шт)`
-		}
-
-		@ $mol_mem
-		gists_favorite( next? : boolean ) {
-			return this.$.$mol_state_local.value( `${ this }.gists_favorite()` , next ) || false
-		}
-
-		@ $mol_mem_key
-		gist_favorite( id : string , next? : boolean ) {
-			return this.$.$mol_state_local.value( `${ this }.gist_favorite(${ id })` , next ) || false
-		}
-
-		@ $mol_mem
-		gists_favorite_duration() {
-			
-			const dur = this.data()
-			.filter( gist => this.gist_favorite( gist.title ) )
-			.reduce( ( sum , gist )=> sum + parseInt( gist.tags['Длительность'][0] ) , 0 )
-			
-			return dur ? `${ dur } мин` : ''
-		}
-
-		@ $mol_mem
-		gists_favorite_label() {
-			return this.gists_favorite_duration() ? [ this.Gists_favorite_duration() ] : []
-		}			
-
-		gist_links() {
-
-			let gists = this.data()
-
-			if( this.gists_favorite() ) {
-
-				gists = gists.filter( gist => this.gist_favorite( gist.title ) )
-			
-			} else {
-			
-				gists = gists.filter( gist => {
-
-					const tags = gist.tags
-					
-					aspect : for( const aspect of Object.keys( tags ) as ( keyof typeof tags )[] ) {
-
-						for( const tag of tags[ aspect ] ) {
-							if( this.filter_tag_checked({ aspect , tag }) ) continue aspect
-						}
-						
-						return false
-					}
-					
-					return true
-				} )
-				
-			}
-
-			const filtered = gists.filter( $mol_match_text( this.gists_filter_query() , gist => [ gist.title , gist.content ] ) )
-			
-			filtered.sort( $mol_compare_text( gist => gist.title ) )
-			
-			return filtered.map( gist => this.Gist_link( gist.title ) )
-		}
-
-		@ $mol_mem_key
-		gist( id : string ) {
-			return this.data().find( gist => gist.title === id )
-		}
-
-		gist_icon( id : string ) {
-			return this.gist( id )!.icon
-		}
-
-		gist_title( id : string ) {
-			return this.gist( id )!.title
-		}
-
-		gist_content( id : string ) {
-			return this.gist( id )!.content
-		}
-
-		tag_title( key : { aspect : string , tag : string } ) {
-			return key.tag
-		}
-
-		gist_aspects( id : string ) {
-			return Object.keys( this.gist( id )!.tags ).map( aspect => this.Gist_aspect( aspect ) )
-		}
-
-		gist_remarks( id : string , next? : string ) {
-			return this.$.$mol_state_local.value( `${ this }.gist_remarks(${ JSON.stringify( id ) })` , next ) || ''
-		}
-
-		gist_aspect_tags( aspect: keyof $audetv_library_gist['tags'] ) {
-			return this.gist_current()!.tags[ aspect ].map( ( tag : string ) => this.Gist_tag({ aspect , tag }) )
-		}
-
-		gist_current( next?: $audetv_library_gist | null ) {
-
-			const id = this.$.$mol_state_arg.value( 'gist' , next && next.title )
-			if( !id ) return null
-
-			return this.gist( id )
-		}
-
-		filter_aspects() {
-
-			console.log( Object.keys( $audetv_library_gist.make( {} ).tags ))
-
-			return ( Object.keys( $audetv_library_gist.make( {} ).tags ) as ( keyof $audetv_library_gist['tags'] )[] )
-			.filter( aspect => this.filter_aspect_tags( aspect ).length > 1 )
-			.map( aspect => this.Filter_aspect( aspect ) )
-		}
-
-		@ $mol_mem_key
-		filter_aspect_tags( aspect: keyof $audetv_library_gist['tags'] ) {
-
-			const values = new Set< string >()
-			
-			for( const gist of this.data() ) {
-				for( const value of gist.tags[ aspect ] ) {
-					values.add( value )
-				}
-			}
-
-			return [ ... values ]
-			.sort( $mol_compare_text( tag => tag ) )
-			.map( ( tag : string ) => this.Filter_tag({ aspect , tag }) )
-		}
-
-		@ $mol_mem_key
-		filter_tag_checked( key : { aspect : string , tag : string } , next? : boolean ) {
-			if( next !== undefined ) new $mol_after_frame( ()=> {
-				this.gist_current( null )
-				this.Gists().Body().scroll_top( 0 )
-			} )
-			next = this.$.$mol_state_local.value( `${ this }.filter_tag_checked(${ JSON.stringify( key ) })` , next ) ?? true
-			if( next == null ) next = super.filter_tag_checked( key )
-			return next
-		}
-
-		suggest() {
-			return this.$.$mol_state_arg.value( 'suggest' ) !== null
+			return `Найдено записей ${ groups.join( '' ) }`
 		}
 
 	}
